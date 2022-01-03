@@ -1,5 +1,4 @@
 package com.company;
-import java.util.Comparator;
 
 public class Card {
     public String suit;
@@ -8,7 +7,7 @@ public class Card {
     public int cardValue;
 
     public String toString() {
-        return String.format("\n%s of %s", symbol, suit);
+        return String.format("%s of %s", symbol, suit);
     }
 
     public Card(String suit, int suitValue, String symbol, int cardValue) {
