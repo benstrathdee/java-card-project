@@ -1,16 +1,21 @@
 package com.company;
 
 import java.util.Scanner;
-import java.io.IOException;
-//import java.io.BufferedReader;
-//import java.io.InputStreamReader;
-//import java.util.Timer;
-//import java.util.TimerTask;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class Snap extends CardGame{
     static Scanner scan = new Scanner(System.in);
-    public static void playGame() throws IOException {
+    public static void playGame() throws Exception {
         System.out.println("Starting a new game of snap!");
+        System.out.println("Would you like to play hard mode? Y | N");
+        String hardMode = scan.next();
+        while (!hardMode.equalsIgnoreCase("y") && !hardMode.equalsIgnoreCase("n")) {
+            System.out.println("Invalid answer. Hard mode? Y | N");
+            hardMode = scan.next();
+        }
         System.out.println("How many players? 1-4");
         int playerAmt = scan.nextInt();
         while (playerAmt > 4 || playerAmt < 1) {
@@ -22,21 +27,19 @@ public class Snap extends CardGame{
         boolean keepPlaying = true;
         while (keepPlaying) {
             String victoryList = "";
-//            snapStr = "";
-            emptyField();
-            generateDeck();
-            shuffleDeck();
+            snapStr = "";
+            prepareGame();
             while (!gameOver) {
                 for (Player player : players) {
-                    if (gameOver) {
+                    if (gameOver) { // Catches some weird occurrences where the game keeps playing
                         break;
                     }
                     if (deck.size() == 0) {
                         System.out.println("Deck Empty! Game Over!");
-                        for (Player vic: players) {
-                            victoryList += String.format("Player %d: %d | ", vic.playerNumber, vic.victories);
+                        for (Player p: players) {
+                            victoryList += String.format("Player %d: %d | ", p.playerNumber, p.victories);
                         }
-                        System.out.printf("\nVictories: %s", victoryList);
+                        System.out.printf("%nVictories: %s", victoryList);
                         gameOver = true;
                     } else {
                         System.out.printf("Player %d, press enter to deal", player.playerNumber);
@@ -44,17 +47,21 @@ public class Snap extends CardGame{
                         dealCard();
                         System.out.println(getFieldTopCard());
                         if (field.size() > 1 && field.get(field.size() - 1).cardValue == field.get(field.size() - 2).cardValue) {
-//                            System.out.printf("Quick Player %d, type SNAP in the next 2 seconds to win!", player.playerNumber);
-//                            try {
-//                                getInput();
-//                            } catch (Exception e) {
-//                                System.out.println(e);
-//                                break;
-//                            }
-                            System.out.printf("Snap! Player %d Wins!", player.playerNumber);
-                            player.addVictory();
-                            for (Player vic: players) {
-                                victoryList += String.format("Player %d: %d | ", vic.playerNumber, vic.victories);
+                            if (hardMode.equalsIgnoreCase("y")) {
+                                System.out.printf("Quick Player %d, type SNAP in the next 5 seconds to win!%n", player.playerNumber);
+                                getInput();
+                                if (snapStr.equalsIgnoreCase("snap")) {
+                                    System.out.printf("%nSnap! Player %d Wins!", player.playerNumber);
+                                    player.addVictory();
+                                } else {
+                                    System.out.printf("Player %d missed their chance! Game Over.", player.playerNumber);
+                                }
+                            } else {
+                                System.out.printf("%nSnap! Player %d Wins!", player.playerNumber);
+                                player.addVictory();
+                            }
+                            for (Player p: players) {
+                                victoryList += String.format("Player %d: %d | ", p.playerNumber, p.victories);
                             }
                             System.out.printf("\nVictories: %s", victoryList);
                             gameOver = true;
@@ -62,8 +69,12 @@ public class Snap extends CardGame{
                     }
                 }
             }
-            System.out.println("\nPlay again? Y to play again, anything else to exit");
+            System.out.println("\nPlay again? Play again? Y | N");
             String again = scan.next();
+            while (!again.equalsIgnoreCase("y") && !again.equalsIgnoreCase("n")) {
+                System.out.println("Invalid answer. Play again? Y | N");
+                again = scan.next();
+            }
             if (again.equalsIgnoreCase("y")) {
                 gameOver = false;
             } else {
@@ -72,26 +83,26 @@ public class Snap extends CardGame{
         }
     }
 
-//    static String snapStr = "";
-//    static TimerTask task = new TimerTask() {
-//        public void run() {
-//            if (snapStr.equals("")) {
-//                System.out.println("So close!");
-//            }
-//        }
-//    };
-//
-//    static void getInput() throws Exception {
-//        Timer timer = new Timer();
-//        timer.schedule(task, 5*1000);
-//        BufferedReader buffScan = new BufferedReader(new InputStreamReader(System.in));
-//        snapStr = buffScan.readLine();
-//        timer.cancel();
-//    }
+    static String snapStr = "";
+    static TimerTask createTimerTask() {
+        return new TimerTask() {
+            public void run() {
+                if (!snapStr.equalsIgnoreCase("snap")) {
+                    System.out.println("So close! Enter to continue!");
+                    cancel();
+                }
+            }
+        };
+    }
+    static void getInput() throws Exception {
+        Timer timer = new Timer();
+        timer.scheduleAtFixedRate(createTimerTask(), 5000, 1000);
+        BufferedReader buffScan = new BufferedReader(new InputStreamReader(System.in));
+        snapStr = buffScan.readLine();
+        timer.cancel();
+    }
 
     public Snap(String name) {
         super(name);
     }
 }
-
-
