@@ -69,8 +69,12 @@ public class Snap extends CardGame{
                     }
                 }
             }
-            System.out.println("\nPlay again? Y to play again, anything else to exit");
+            System.out.println("\nPlay again? Play again? Y | N");
             String again = scan.next();
+            while (!again.equalsIgnoreCase("y") && !again.equalsIgnoreCase("n")) {
+                System.out.println("Invalid answer. Play again? Y | N");
+                again = scan.next();
+            }
             if (again.equalsIgnoreCase("y")) {
                 gameOver = false;
             } else {
