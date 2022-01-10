@@ -50,7 +50,7 @@ public class CardGame {
         generateDeck();
         shuffleDeck();
 //        uncomment this for easier testing:
-        sortDeckInNumberOrder();
+//        sortDeckInNumberOrder();
     }
     public static void dealCard() {
         field.add(deck.get(0));
