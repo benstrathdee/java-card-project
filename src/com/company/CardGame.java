@@ -1,7 +1,6 @@
 package com.company;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 public class CardGame {
     static public String name = "";
@@ -28,11 +27,11 @@ public class CardGame {
     public static ArrayList<Card> getDeck() {
         return deck;
     }
-    public static void sortDeckIntoSuits() {
-        deck.sort(new SuitComparator());
-    }
     public static void sortDeckInNumberOrder() {
         deck.sort(new ValueComparator());
+    }
+    public static void sortDeckIntoSuits() {
+        deck.sort(new SuitComparator());
     }
     public static void shuffleDeck() {
         deck.sort(new RandomComparator());
@@ -45,6 +44,13 @@ public class CardGame {
     }
     public static void emptyField() {
         field.clear();
+    }
+    public static void prepareGame() {
+        emptyField();
+        generateDeck();
+        shuffleDeck();
+//        uncomment this for easier testing:
+        sortDeckInNumberOrder();
     }
     public static void dealCard() {
         field.add(deck.get(0));

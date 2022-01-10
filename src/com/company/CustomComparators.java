@@ -2,7 +2,7 @@ package com.company;
 
 import java.util.Comparator;
 
-class SuitComparator implements Comparator<Card> {
+class ValueComparator implements Comparator<Card> {
     public int compare(Card card1, Card card2) {
         int cardValue1 = card1.cardValue;
         int cardValue2 = card2.cardValue;
@@ -12,7 +12,7 @@ class SuitComparator implements Comparator<Card> {
     }
 }
 
-class ValueComparator implements Comparator<Card> {
+class SuitComparator implements Comparator<Card> {
     public int compare(Card card1, Card card2) {
         int cardValue1 = card1.cardValue;
         int cardValue2 = card2.cardValue;
